@@ -8,7 +8,7 @@ export interface SearXNGResult {
   category: string;
   parsed_url: string[];
   thumbnail?: string;
-  publishedDate?: number;
+  publishedDate?: number | string;
 }
 
 export interface SearXNGResponse {

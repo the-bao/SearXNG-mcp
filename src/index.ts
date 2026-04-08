@@ -144,7 +144,7 @@ Error Handling:
           category: r.category,
           ...(r.thumbnail ? { thumbnail: r.thumbnail } : {}),
           ...(r.publishedDate
-            ? { publishedDate: new Date(r.publishedDate * 1000).toISOString() }
+            ? { publishedDate: parsePublishedDate(r.publishedDate) }
             : {}),
         })),
         answers: data.answers || [],
@@ -187,6 +187,21 @@ Error Handling:
     }
   }
 );
+
+function parsePublishedDate(value: number | string): string | undefined {
+  try {
+    let date: Date;
+    if (typeof value === "number") {
+      date = new Date(value * 1000);
+    } else {
+      date = new Date(value);
+    }
+    const iso = date.toISOString();
+    return iso === "Invalid Date" ? undefined : iso;
+  } catch {
+    return undefined;
+  }
+}
 
 function formatTextContent(
   results: SearchResult,
