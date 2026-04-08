@@ -1,6 +1,6 @@
 {
   "name": "@the-bao/searxng-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for SearXNG metasearch engine — lets AI tools search the web",
   "type": "module",
   "main": "dist/index.js",
