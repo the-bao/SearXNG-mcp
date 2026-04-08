@@ -16,10 +16,20 @@ search:
 
 ## Quick Start
 
+### Install via Claude Code
+
 ```bash
-git clone <repo-url> && cd SearXNG-mcp
-npm install && npm run build
-SEARXNG_BASE_URL="http://your-searxng-host:8080" node dist/index.js
+# Global (recommended, works in all projects)
+claude mcp add searxng -s user -e SEARXNG_BASE_URL=http://localhost:8080 -- npx -y @the-bao/searxng-mcp
+
+# Project-level only
+claude mcp add searxng -e SEARXNG_BASE_URL=http://localhost:8080 -- npx -y @the-bao/searxng-mcp
+```
+
+### Manual
+
+```bash
+npx -y @the-bao/searxng-mcp
 ```
 
 ## Configuration
@@ -34,14 +44,24 @@ SEARXNG_BASE_URL="http://your-searxng-host:8080" node dist/index.js
 
 Add to your MCP client configuration. Examples for common clients:
 
-#### Claude Desktop / Claude Code (`claude_desktop_config.json` or `.claude/settings.json`)
+#### Claude Code
+
+```bash
+# Global (recommended, works in all projects)
+claude mcp add searxng -s user -e SEARXNG_BASE_URL=http://localhost:8080 -- npx -y @the-bao/searxng-mcp
+
+# Project-level only
+claude mcp add searxng -e SEARXNG_BASE_URL=http://localhost:8080 -- npx -y @the-bao/searxng-mcp
+```
+
+#### Claude Desktop (`claude_desktop_config.json`)
 
 ```json
 {
   "mcpServers": {
     "searxng": {
-      "command": "node",
-      "args": ["/absolute/path/to/SearXNG-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "@the-bao/searxng-mcp"],
       "env": {
         "SEARXNG_BASE_URL": "http://localhost:8080"
       }
@@ -56,8 +76,8 @@ Add to your MCP client configuration. Examples for common clients:
 {
   "servers": {
     "searxng": {
-      "command": "node",
-      "args": ["/absolute/path/to/SearXNG-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "@the-bao/searxng-mcp"],
       "env": {
         "SEARXNG_BASE_URL": "http://localhost:8080"
       }
@@ -72,8 +92,8 @@ Add to your MCP client configuration. Examples for common clients:
 {
   "mcpServers": {
     "searxng": {
-      "command": "node",
-      "args": ["/absolute/path/to/SearXNG-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "@the-bao/searxng-mcp"],
       "env": {
         "SEARXNG_BASE_URL": "http://localhost:8080"
       }
@@ -164,10 +184,20 @@ search:
 
 ## 快速开始
 
+### 通过 Claude Code 安装
+
 ```bash
-git clone <repo-url> && cd SearXNG-mcp
-npm install && npm run build
-SEARXNG_BASE_URL="http://你的SearXNG地址:8080" node dist/index.js
+# 全局安装（推荐，所有项目可用）
+claude mcp add searxng -s user -e SEARXNG_BASE_URL=http://localhost:8080 -- npx -y @the-bao/searxng-mcp
+
+# 仅当前项目
+claude mcp add searxng -e SEARXNG_BASE_URL=http://localhost:8080 -- npx -y @the-bao/searxng-mcp
+```
+
+### 手动运行
+
+```bash
+npx -y @the-bao/searxng-mcp
 ```
 
 ## 配置
@@ -182,14 +212,24 @@ SEARXNG_BASE_URL="http://你的SearXNG地址:8080" node dist/index.js
 
 将以下内容添加到你的 MCP 客户端配置中。以下是常见客户端的示例：
 
-#### Claude Desktop / Claude Code（`claude_desktop_config.json` 或 `.claude/settings.json`）
+#### Claude Code
+
+```bash
+# 全局安装（推荐，所有项目可用）
+claude mcp add searxng -s user -e SEARXNG_BASE_URL=http://localhost:8080 -- npx -y @the-bao/searxng-mcp
+
+# 仅当前项目
+claude mcp add searxng -e SEARXNG_BASE_URL=http://localhost:8080 -- npx -y @the-bao/searxng-mcp
+```
+
+#### Claude Desktop（`claude_desktop_config.json`）
 
 ```json
 {
   "mcpServers": {
     "searxng": {
-      "command": "node",
-      "args": ["/absolute/path/to/SearXNG-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "@the-bao/searxng-mcp"],
       "env": {
         "SEARXNG_BASE_URL": "http://localhost:8080"
       }
@@ -204,8 +244,8 @@ SEARXNG_BASE_URL="http://你的SearXNG地址:8080" node dist/index.js
 {
   "servers": {
     "searxng": {
-      "command": "node",
-      "args": ["/absolute/path/to/SearXNG-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "@the-bao/searxng-mcp"],
       "env": {
         "SEARXNG_BASE_URL": "http://localhost:8080"
       }
@@ -220,8 +260,8 @@ SEARXNG_BASE_URL="http://你的SearXNG地址:8080" node dist/index.js
 {
   "mcpServers": {
     "searxng": {
-      "command": "node",
-      "args": ["/absolute/path/to/SearXNG-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "@the-bao/searxng-mcp"],
       "env": {
         "SEARXNG_BASE_URL": "http://localhost:8080"
       }
