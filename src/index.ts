@@ -8,6 +8,37 @@ import type { SearchResult, ResponseFormat } from "./types.js";
 
 const CHARACTER_LIMIT = 25000;
 
+// ─── Search Presets ──────────────────────────────────────────────────
+
+const SEARCH_PRESETS: Record<
+  string,
+  { categories?: string; engines?: string; time_range?: string; description: string }
+> = {
+  general: {
+    description: "General web search using all enabled engines",
+  },
+  code: {
+    engines: "github,stackoverflow",
+    description:
+      "Search for code repositories and programming resources (GitHub, StackOverflow)",
+  },
+  tech: {
+    categories: "it",
+    description: "Search for IT and computer science related content",
+  },
+  academic: {
+    categories: "science",
+    engines: "google scholar,arxiv,pubmed",
+    description:
+      "Search for scientific papers and academic research (arXiv, PubMed, Google Scholar)",
+  },
+  news: {
+    categories: "news",
+    time_range: "month",
+    description: "Search for recent news from the past month",
+  },
+};
+
 const server = new McpServer({
   name: "searxng-mcp-server",
   version: "1.0.0",
@@ -23,6 +54,18 @@ const SearchInputSchema = z
       .max(500)
       .describe(
         "Search query string. Supports search engine syntax like site:github.com, filetype:pdf, etc."
+      ),
+    preset: z
+      .enum(["general", "code", "tech", "academic", "news"])
+      .optional()
+      .describe(
+        "Search preset for common use cases. " +
+          "'general' = all engines, no category filter; " +
+          "'code' = search GitHub and StackOverflow for code and programming; " +
+          "'tech' = IT category for computer science and technology; " +
+          "'academic' = science category for papers and research (arXiv, PubMed, Google Scholar); " +
+          "'news' = recent news from the past month. " +
+          "Leave empty to manually specify categories/engines."
       ),
     categories: z
       .string()
@@ -83,10 +126,18 @@ server.registerTool(
 
 Supports filtering by category (news, images, videos, science, IT, etc.), specific engines, language, time range, and safe search.
 
-Returns search results with title, URL, description, source engine, and relevance score. Also returns instant answers, suggestions, and infoboxes when available.
+**Presets** provide quick access to common search scenarios:
+  - 'general' — all engines, no filter (default web search)
+  - 'code' — GitHub + StackOverflow for code and programming questions
+  - 'tech' — IT category for computer science and technology topics
+  - 'academic' — science category + arXiv/PubMed/Google Scholar for papers and research
+  - 'news' — news category, past month
+
+When a preset is used, explicit categories/engines/time_range params still take precedence over preset defaults.
 
 Args:
   - query (string, required): Search query. Supports syntax like site:, filetype:, etc.
+  - preset ('general'|'code'|'tech'|'academic'|'news', optional): Quick search mode — see above
   - categories (string, optional): Filter by category ('general', 'news', 'images', 'videos', 'science', 'it', 'files', 'music', 'repos', 'packages')
   - engines (string, optional): Specific engines ('google', 'bing', 'duckduckgo', 'wikipedia', 'github', 'stackoverflow', 'arxiv', 'pubmed', 'youtube')
   - language (string, optional): Language code ('en', 'zh', 'ja', 'de', 'fr', 'es')
@@ -102,10 +153,11 @@ Returns structured search results including:
   - infoboxes[]: Summary info boxes with links and attributes
 
 Examples:
-  - "Search for Rust programming tutorials" -> query="Rust programming tutorials"
-  - "Find recent news about AI" -> query="AI", categories="news", time_range="month"
-  - "Search GitHub for MCP servers" -> query="MCP server", engines="github"
-  - "Find scientific papers about transformers" -> query="transformer model", categories="science"
+  - "Search for Rust programming tutorials" -> query="Rust programming tutorials", preset="general"
+  - "Find recent news about AI" -> query="AI", preset="news"
+  - "Search GitHub for MCP servers" -> query="MCP server", preset="code"
+  - "Find scientific papers about transformers" -> query="transformer model", preset="academic"
+  - "What is WebAssembly?" -> query="What is WebAssembly", preset="tech"
 
 Error Handling:
   - Returns "403 Forbidden" error if JSON format is not enabled in SearXNG settings
@@ -120,12 +172,15 @@ Error Handling:
   },
   async (params: SearchInput) => {
     try {
+      // Apply preset defaults, explicit params take precedence
+      const preset = params.preset ? SEARCH_PRESETS[params.preset] : undefined;
+
       const data = await search(params.query, {
-        categories: params.categories,
-        engines: params.engines,
+        categories: params.categories ?? preset?.categories,
+        engines: params.engines ?? preset?.engines,
         language: params.language,
         pageno: params.pageno,
-        time_range: params.time_range,
+        time_range: params.time_range ?? (preset?.time_range as "day" | "month" | "year" | undefined),
         safesearch: params.safesearch,
       });
 

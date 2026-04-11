@@ -111,6 +111,7 @@ Search the web via SearXNG, aggregating results from Google, Bing, DuckDuckGo, W
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `query` | string | *required* | Search query (supports `site:`, `filetype:`, etc.) |
+| `preset` | string | — | Quick search mode: `general`, `code`, `tech`, `academic`, `news` (see below) |
 | `categories` | string | — | Filter: `general`, `news`, `images`, `videos`, `science`, `it`, `files`, `music`, `repos`, `packages` |
 | `engines` | string | — | Specific engines: `google`, `bing`, `duckduckgo`, `wikipedia`, `github`, `stackoverflow`, `arxiv`, `pubmed`, `youtube`... |
 | `language` | string | — | Language code: `en`, `zh`, `ja`, `de`, `fr`, `es`... |
@@ -119,13 +120,24 @@ Search the web via SearXNG, aggregating results from Google, Bing, DuckDuckGo, W
 | `safesearch` | number | 0 | 0=off, 1=moderate, 2=strict |
 | `response_format` | string | `markdown` | `markdown` or `json` |
 
+**Presets** provide one-click search mode switching. Explicit params (`categories`, `engines`, `time_range`) override preset values when both are provided.
+
+| Preset | categories | engines | time_range | Use case |
+|--------|-----------|---------|------------|----------|
+| `general` | — | — | — | General web search |
+| `code` | — | `github,stackoverflow` | — | Code & programming |
+| `tech` | `it` | — | — | IT & computer science |
+| `academic` | `science` | `google scholar,arxiv,pubmed` | — | Papers & research |
+| `news` | `news` | — | `month` | Recent news |
+
 **Examples:**
 
 ```
-searxng_search(query="Rust programming tutorial")
-searxng_search(query="AI", categories="news", time_range="day")
-searxng_search(query="MCP server", engines="github")
-searxng_search(query="transformer attention", categories="science")
+searxng_search(query="Rust programming tutorial", preset="general")
+searxng_search(query="AI", preset="news")
+searxng_search(query="MCP server", preset="code")
+searxng_search(query="transformer attention", preset="academic")
+searxng_search(query="WebAssembly", preset="tech")
 ```
 
 ### `searxng_autocomplete`
@@ -279,6 +291,7 @@ claude mcp add searxng -e SEARXNG_BASE_URL=http://localhost:8080 -- npx -y @the-
 | 参数 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
 | `query` | string | *必填* | 搜索关键词（支持 `site:`、`filetype:` 等语法） |
+| `preset` | string | — | 快捷搜索模式：`general`、`code`、`tech`、`academic`、`news`（见下表） |
 | `categories` | string | — | 分类过滤：`general`、`news`、`images`、`videos`、`science`、`it`、`files`、`music`、`repos`、`packages` |
 | `engines` | string | — | 指定引擎：`google`、`bing`、`duckduckgo`、`wikipedia`、`github`、`stackoverflow`、`arxiv`、`pubmed`、`youtube` 等 |
 | `language` | string | — | 语言代码：`en`、`zh`、`ja`、`de`、`fr`、`es` 等 |
@@ -287,13 +300,24 @@ claude mcp add searxng -e SEARXNG_BASE_URL=http://localhost:8080 -- npx -y @the-
 | `safesearch` | number | 0 | 安全搜索：0=关闭、1=适中、2=严格 |
 | `response_format` | string | `markdown` | 输出格式：`markdown` 或 `json` |
 
+**预设（Presets）** 提供一键切换搜索模式。当同时指定预设和显式参数（`categories`、`engines`、`time_range`）时，显式参数优先。
+
+| 预设 | categories | engines | time_range | 适用场景 |
+|------|-----------|---------|------------|----------|
+| `general` | — | — | — | 通用搜索 |
+| `code` | — | `github,stackoverflow` | — | 代码与编程 |
+| `tech` | `it` | — | — | IT 与计算机科学 |
+| `academic` | `science` | `google scholar,arxiv,pubmed` | — | 论文与学术研究 |
+| `news` | `news` | — | `month` | 近期新闻 |
+
 **示例：**
 
 ```
-searxng_search(query="Rust 编程教程")
-searxng_search(query="AI", categories="news", time_range="day")       # 搜索今日 AI 新闻
-searxng_search(query="MCP server", engines="github")                  # 只搜索 GitHub
-searxng_search(query="transformer attention", categories="science")   # 搜索学术论文
+searxng_search(query="Rust 编程教程", preset="general")
+searxng_search(query="AI", preset="news")                             # 搜索近期 AI 新闻
+searxng_search(query="MCP server", preset="code")                     # 搜索代码仓库
+searxng_search(query="transformer attention", preset="academic")      # 搜索学术论文
+searxng_search(query="WebAssembly", preset="tech")                    # 搜索 IT 技术内容
 ```
 
 ### `searxng_autocomplete`
